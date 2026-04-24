@@ -23,7 +23,7 @@ TZ: fayna-digital-docs/contributing/CAMPSCOUT_MASTER_TZ.md §16 Phase 8
     "author": "Fayna Digital — Volodymyr Shevchenko",
     "website": "https://fayna.agency",
     "license": "LGPL-3",
-    "depends": ['base', 'website', 'mail'],
+    "depends": ["base", "website", "mail"],
     "data": [
         "data/ir_config_parameter.xml",
     ],
