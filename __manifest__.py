@@ -25,6 +25,7 @@ TZ: fayna-digital-docs/contributing/CAMPSCOUT_MASTER_TZ.md §16 Phase 8
     "license": "LGPL-3",
     "depends": ["base", "website", "mail"],
     "data": [
+        "security/ir.model.access.csv",
         "data/ir_config_parameter.xml",
     ],
     "installable": True,
