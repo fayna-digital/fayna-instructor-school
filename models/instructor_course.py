@@ -25,9 +25,7 @@ class InstructorCourse(models.Model):
     end_date = fields.Date(string="End date")
 
     max_participants = fields.Integer(string="Max participants")
-    enrolled_count = fields.Integer(
-        string="Enrolled", compute="_compute_enrolled_count"
-    )
+    enrolled_count = fields.Integer(string="Enrolled", compute="_compute_enrolled_count")
 
     instructor_ids = fields.Many2many(
         "res.users", string="Instructors", help="Who teaches this course"

@@ -1,4 +1,5 @@
 from datetime import date
+
 from odoo.tests.common import TransactionCase
 
 
