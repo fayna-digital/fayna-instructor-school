@@ -7,7 +7,11 @@ class TestScaffold(TransactionCase):
     per master TZ §16."""
 
     def test_feature_flag_seeded_as_disabled(self):
-        param = self.env["ir.config_parameter"].sudo().get_param("fayna_instructor_school.active")
+        param = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("fayna_instructor_school.active")
+        )
         self.assertEqual(param, "False")
 
     def test_module_installed(self):
