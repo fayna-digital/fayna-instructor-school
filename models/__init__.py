@@ -1,2 +1,1 @@
-from . import instructor_course
-from . import instructor_enrollment
+from . import instructor_course, instructor_enrollment

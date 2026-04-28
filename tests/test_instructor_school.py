@@ -3,11 +3,10 @@
 Coverage target: ≥ 70 % (models + state machine + ACL + website route).
 """
 from datetime import date, timedelta
-from unittest.mock import patch
 
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests.common import HttpCase, TransactionCase
 from odoo.tests import tagged
+from odoo.tests.common import HttpCase, TransactionCase
 
 
 @tagged("post_install", "-at_install")
@@ -68,13 +67,12 @@ class TestInstructorCourse(TransactionCase):
         self.env["fayna.instructor.enrollment"].create(
             {"course_id": course.id, "partner_id": partner.id}
         )
-        from psycopg2 import IntegrityError
         from odoo.tools import mute_logger
-        with mute_logger("odoo.sql_db"):
-            with self.assertRaises((IntegrityError, Exception)):
-                self.env["fayna.instructor.enrollment"].create(
-                    {"course_id": course.id, "partner_id": partner.id}
-                )
+        from psycopg2 import IntegrityError
+        with mute_logger("odoo.sql_db"), self.assertRaises((IntegrityError, Exception)):
+            self.env["fayna.instructor.enrollment"].create(
+                {"course_id": course.id, "partner_id": partner.id}
+            )
 
     # ---------------------------------------------------------------- #
     # test_available_spots_compute                                      #

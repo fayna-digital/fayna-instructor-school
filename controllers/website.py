@@ -37,8 +37,8 @@ class InstructorSchoolController(http.Controller):
         Requires authentication (auth='user').  If the user is not logged in
         Odoo's website module redirects them to the login page automatically.
         """
-        Course = request.env["fayna.instructor.course"].sudo()
-        course = Course.browse(course_id).exists()
+        course_model = request.env["fayna.instructor.course"].sudo()
+        course = course_model.browse(course_id).exists()
 
         if not course or course.state != "open":
             return request.redirect("/instructor-school")
