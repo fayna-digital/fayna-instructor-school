@@ -82,9 +82,7 @@ class InstructorEnrollment(models.Model):
     def action_cancel(self):
         for enrollment in self:
             if enrollment.state in ("completed", "cancelled"):
-                raise UserError(
-                    _("Cannot cancel a completed or already cancelled enrollment.")
-                )
+                raise UserError(_("Cannot cancel a completed or already cancelled enrollment."))
             enrollment.state = "cancelled"
 
     # ------------------------------------------------------------------ #
@@ -97,7 +95,5 @@ class InstructorEnrollment(models.Model):
         for record in records:
             course = record.course_id
             if course.max_participants and course.available_spots < 0:
-                raise UserError(
-                    _("Course '%s' is fully booked.") % course.name
-                )
+                raise UserError(_("Course '%s' is fully booked.") % course.name)
         return records

@@ -67,17 +67,13 @@ class InstructorCourse(models.Model):
     def _compute_enrolled_count(self):
         for course in self:
             course.enrolled_count = len(
-                course.enrollment_ids.filtered(
-                    lambda e: e.state not in ("cancelled",)
-                )
+                course.enrollment_ids.filtered(lambda e: e.state not in ("cancelled",))
             )
 
     @api.depends("max_participants", "enrolled_count")
     def _compute_available_spots(self):
         for course in self:
-            course.available_spots = max(
-                0, (course.max_participants or 0) - course.enrolled_count
-            )
+            course.available_spots = max(0, (course.max_participants or 0) - course.enrolled_count)
 
     # ------------------------------------------------------------------ #
     # Constraints                                                          #
@@ -110,9 +106,7 @@ class InstructorCourse(models.Model):
             if course.state != "in_progress":
                 raise UserError(_("Only in-progress courses can be completed."))
             course.state = "completed"
-            for enrollment in course.enrollment_ids.filtered(
-                lambda e: e.state == "confirmed"
-            ):
+            for enrollment in course.enrollment_ids.filtered(lambda e: e.state == "confirmed"):
                 enrollment.state = "completed"
 
     def action_cancel(self):

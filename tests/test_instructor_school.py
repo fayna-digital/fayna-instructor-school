@@ -2,6 +2,7 @@
 
 Coverage target: ≥ 70 % (models + state machine + ACL + website route).
 """
+
 from datetime import date, timedelta
 
 from odoo.exceptions import UserError, ValidationError
@@ -69,6 +70,7 @@ class TestInstructorCourse(TransactionCase):
         )
         from odoo.tools import mute_logger
         from psycopg2 import IntegrityError
+
         with mute_logger("odoo.sql_db"), self.assertRaises((IntegrityError, Exception)):
             self.env["fayna.instructor.enrollment"].create(
                 {"course_id": course.id, "partner_id": partner.id}
