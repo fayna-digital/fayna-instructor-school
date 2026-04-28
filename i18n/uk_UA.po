@@ -1,0 +1,193 @@
+# Ukrainian translation for fayna_instructor_school
+# Copyright (C) 2026 Fayna Digital — Volodymyr Shevchenko
+# License LGPL-3 or later (http://www.gnu.org/licenses/lgpl).
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-28 00:00+0000\n"
+"PO-Revision-Date: 2026-04-28 00:00+0000\n"
+"Last-Translator: Fayna Digital <admin@fayna.agency>\n"
+"Language-Team: Ukrainian\n"
+"Language: uk_UA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+# module: fayna_instructor_school
+msgid "Instructor School Course"
+msgstr "Курс школи інструкторів"
+
+# module: fayna_instructor_school
+msgid "Instructor School Enrollment"
+msgstr "Запис до школи інструкторів"
+
+# module: fayna_instructor_school
+msgid "Course Name"
+msgstr "Назва курсу"
+
+# module: fayna_instructor_school
+msgid "Description"
+msgstr "Опис"
+
+# module: fayna_instructor_school
+msgid "Start Date"
+msgstr "Дата початку"
+
+# module: fayna_instructor_school
+msgid "End Date"
+msgstr "Дата закінчення"
+
+# module: fayna_instructor_school
+msgid "Max Participants"
+msgstr "Максимум учасників"
+
+# module: fayna_instructor_school
+msgid "Location"
+msgstr "Місце проведення"
+
+# module: fayna_instructor_school
+msgid "Price"
+msgstr "Ціна"
+
+# module: fayna_instructor_school
+msgid "Currency"
+msgstr "Валюта"
+
+# module: fayna_instructor_school
+msgid "Enrollments"
+msgstr "Записи"
+
+# module: fayna_instructor_school
+msgid "Status"
+msgstr "Статус"
+
+# module: fayna_instructor_school
+msgid "Draft"
+msgstr "Чернетка"
+
+# module: fayna_instructor_school
+msgid "Open"
+msgstr "Відкритий"
+
+# module: fayna_instructor_school
+msgid "In Progress"
+msgstr "Триває"
+
+# module: fayna_instructor_school
+msgid "Completed"
+msgstr "Завершено"
+
+# module: fayna_instructor_school
+msgid "Cancelled"
+msgstr "Скасовано"
+
+# module: fayna_instructor_school
+msgid "Enrolled"
+msgstr "Записано"
+
+# module: fayna_instructor_school
+msgid "Available Spots"
+msgstr "Вільних місць"
+
+# module: fayna_instructor_school
+msgid "Open Enrollment"
+msgstr "Відкрити запис"
+
+# module: fayna_instructor_school
+msgid "Start Course"
+msgstr "Розпочати курс"
+
+# module: fayna_instructor_school
+msgid "Complete"
+msgstr "Завершити"
+
+# module: fayna_instructor_school
+msgid "Cancel"
+msgstr "Скасувати"
+
+# module: fayna_instructor_school
+msgid "Only draft courses can be opened for enrollment."
+msgstr "Відкрити запис можна лише для курсів у статусі «Чернетка»."
+
+# module: fayna_instructor_school
+msgid "Only open courses can be started."
+msgstr "Розпочати можна лише відкриті курси."
+
+# module: fayna_instructor_school
+msgid "Only in-progress courses can be completed."
+msgstr "Завершити можна лише курси, що тривають."
+
+# module: fayna_instructor_school
+msgid "End date cannot be before start date."
+msgstr "Дата закінчення не може бути раніше дати початку."
+
+# module: fayna_instructor_school
+msgid "Course"
+msgstr "Курс"
+
+# module: fayna_instructor_school
+msgid "Participant"
+msgstr "Учасник"
+
+# module: fayna_instructor_school
+msgid "Enrollment Date"
+msgstr "Дата реєстрації"
+
+# module: fayna_instructor_school
+msgid "Pending"
+msgstr "Очікує"
+
+# module: fayna_instructor_school
+msgid "Confirmed"
+msgstr "Підтверджено"
+
+# module: fayna_instructor_school
+msgid "Notes"
+msgstr "Нотатки"
+
+# module: fayna_instructor_school
+msgid "Payment"
+msgstr "Оплата"
+
+# module: fayna_instructor_school
+msgid "Unpaid"
+msgstr "Не оплачено"
+
+# module: fayna_instructor_school
+msgid "Paid"
+msgstr "Оплачено"
+
+# module: fayna_instructor_school
+msgid "Only pending enrollments can be confirmed."
+msgstr "Підтвердити можна лише записи зі статусом «Очікує»."
+
+# module: fayna_instructor_school
+msgid "Only confirmed enrollments can be completed."
+msgstr "Завершити можна лише підтверджені записи."
+
+# module: fayna_instructor_school
+msgid "Cannot cancel a completed or already cancelled enrollment."
+msgstr "Неможливо скасувати вже завершений або скасований запис."
+
+# module: fayna_instructor_school
+msgid "Course '%s' is fully booked."
+msgstr "Курс «%s» повністю заповнений."
+
+# module: fayna_instructor_school
+msgid "This person is already enrolled in the course."
+msgstr "Ця особа вже записана на курс."
+
+# module: fayna_instructor_school
+msgid "Courses"
+msgstr "Курси"
+
+# module: fayna_instructor_school
+msgid "Instructor School"
+msgstr "Школа інструкторів"
+
+# module: fayna_instructor_school
+msgid "Camp"
+msgstr "Табір"

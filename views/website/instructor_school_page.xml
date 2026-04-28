@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!--  Public website page — /instructor-school                    -->
+    <!-- ============================================================ -->
+    <template id="instructor_school_page" name="Instructor School — Public Page">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <!-- Hero -->
+                <section class="o_colored_level o_cc o_cc1 pt-5 pb-5 text-center">
+                    <div class="container">
+                        <h1 class="display-4 fw-bold">Instructor School</h1>
+                        <p class="lead">
+                            Professional development courses for camp instructors.
+                            Enroll in an open course below.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Course listing -->
+                <section class="pt-5 pb-5">
+                    <div class="container">
+                        <t t-if="not courses">
+                            <div class="alert alert-info text-center">
+                                No open courses at the moment. Check back soon!
+                            </div>
+                        </t>
+                        <div class="row g-4">
+                            <t t-foreach="courses" t-as="course">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="card h-100 shadow-sm">
+                                        <div class="card-body d-flex flex-column">
+                                            <h5 class="card-title">
+                                                <t t-esc="course.name"/>
+                                            </h5>
+                                            <ul class="list-unstyled text-muted small mb-3">
+                                                <li t-if="course.start_date">
+                                                    <i class="fa fa-calendar me-1"/>
+                                                    <t t-esc="course.start_date"/>
+                                                    <t t-if="course.end_date">
+                                                        — <t t-esc="course.end_date"/>
+                                                    </t>
+                                                </li>
+                                                <li t-if="course.location">
+                                                    <i class="fa fa-map-marker me-1"/>
+                                                    <t t-esc="course.location"/>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-users me-1"/>
+                                                    <t t-esc="course.available_spots"/> spots left
+                                                </li>
+                                                <li t-if="course.price">
+                                                    <i class="fa fa-tag me-1"/>
+                                                    <t t-esc="course.price"/>
+                                                    <t t-esc="course.currency_id.symbol"/>
+                                                </li>
+                                            </ul>
+                                            <div t-if="course.description"
+                                                 class="mb-3 text-muted small"
+                                                 t-out="course.description[:300]"/>
+                                            <div class="mt-auto">
+                                                <t t-if="course.available_spots > 0">
+                                                    <a t-attf-href="/instructor-school/enroll/#{course.id}"
+                                                       class="btn btn-primary w-100">
+                                                        Enroll Now
+                                                    </a>
+                                                </t>
+                                                <t t-else="">
+                                                    <button class="btn btn-secondary w-100" disabled="1">
+                                                        Fully Booked
+                                                    </button>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!--  Enrollment confirmation page                                 -->
+    <!-- ============================================================ -->
+    <template id="instructor_school_enroll_confirm" name="Instructor School — Enrollment Confirmed">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <section class="pt-5 pb-5">
+                    <div class="container text-center">
+                        <div class="py-5">
+                            <i class="fa fa-check-circle fa-4x text-success mb-3"/>
+                            <h2>Enrollment Submitted!</h2>
+                            <p class="lead">
+                                You have been enrolled in
+                                <strong><t t-esc="course.name"/></strong>.
+                            </p>
+                            <p class="text-muted">
+                                Our team will confirm your enrollment shortly.
+                            </p>
+                            <a href="/instructor-school" class="btn btn-outline-primary mt-3">
+                                Back to Courses
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!--  Already enrolled page                                        -->
+    <!-- ============================================================ -->
+    <template id="instructor_school_already_enrolled" name="Instructor School — Already Enrolled">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <section class="pt-5 pb-5">
+                    <div class="container text-center">
+                        <div class="py-5">
+                            <i class="fa fa-info-circle fa-4x text-info mb-3"/>
+                            <h2>Already Enrolled</h2>
+                            <p class="lead">
+                                You are already enrolled in
+                                <strong><t t-esc="course.name"/></strong>.
+                            </p>
+                            <a href="/instructor-school" class="btn btn-outline-primary mt-3">
+                                Back to Courses
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>
