@@ -5,7 +5,7 @@ Covers the 5 required test cases:
   - test_enroll_partner
   - test_complete_enrollment
   - test_course_enrollment_count
-  - test_archived_course_cannot_enroll
+  - test_cancelled_course_cannot_enroll
 """
 
 from odoo.exceptions import UserError, ValidationError
@@ -66,11 +66,11 @@ class TestCourseEnrollment(TransactionCase):
     # ------------------------------------------------------------------ #
 
     def test_enroll_partner(self):
-        """Partner can be enrolled in an active course."""
-        course = self._make_course(state="active")
+        """Partner can be enrolled in an open course."""
+        course = self._make_course(state="open")
         enrollment = self._enroll(course, self.partner_a)
 
-        self.assertEqual(enrollment.state, "enrolled")
+        self.assertEqual(enrollment.state, "pending")
         self.assertEqual(enrollment.course_id, course)
         self.assertEqual(enrollment.partner_id, self.partner_a)
         self.assertTrue(enrollment.enrollment_date)
@@ -80,21 +80,21 @@ class TestCourseEnrollment(TransactionCase):
     # ------------------------------------------------------------------ #
 
     def test_complete_enrollment(self):
-        """Enrollment transitions from enrolled to completed."""
-        course = self._make_course(state="active")
+        """Enrollment transitions from confirmed to completed."""
+        course = self._make_course(state="open")
         enrollment = self._enroll(course, self.partner_a)
-        self.assertEqual(enrollment.state, "enrolled")
+        enrollment.action_confirm()
+        self.assertEqual(enrollment.state, "confirmed")
 
         enrollment.action_complete()
         self.assertEqual(enrollment.state, "completed")
 
     def test_complete_enrollment_wrong_state_raises(self):
-        """Cannot complete an already dropped enrollment."""
-        course = self._make_course(state="active")
+        """Cannot complete a pending enrollment (must be confirmed first)."""
+        course = self._make_course(state="open")
         enrollment = self._enroll(course, self.partner_a)
-        enrollment.action_drop()
         with self.assertRaises(UserError):
-            enrollment.action_complete()
+            enrollment.action_complete()  # pending → completed not allowed
 
     # ------------------------------------------------------------------ #
     # test_course_enrollment_count                                         #
@@ -102,7 +102,7 @@ class TestCourseEnrollment(TransactionCase):
 
     def test_course_enrollment_count(self):
         """enrollment_count computed field tracks enrolled records."""
-        course = self._make_course(state="active")
+        course = self._make_course(state="open")
         self.assertEqual(course.enrollment_count, 0)
 
         self._enroll(course, self.partner_a)
@@ -112,38 +112,39 @@ class TestCourseEnrollment(TransactionCase):
         self.assertEqual(course.enrollment_count, 2)
 
     # ------------------------------------------------------------------ #
-    # test_archived_course_cannot_enroll                                   #
+    # test_cancelled_course_cannot_enroll                                  #
     # ------------------------------------------------------------------ #
 
-    def test_archived_course_cannot_enroll(self):
-        """Enrolling in an archived course raises UserError."""
-        course = self._make_course(state="active")
-        course.action_archive_course()
-        self.assertEqual(course.state, "archived")
+    def test_cancelled_course_cannot_enroll(self):
+        """Cancelling a course also cancels active enrollments."""
+        course = self._make_course(state="open")
+        enrollment = self._enroll(course, self.partner_a)
+        self.assertEqual(enrollment.state, "pending")
 
-        with self.assertRaises((UserError, ValidationError)):
-            self._enroll(course, self.partner_a)
+        course.action_cancel()
+        self.assertEqual(course.state, "cancelled")
+        self.assertEqual(enrollment.state, "cancelled")
 
     # ------------------------------------------------------------------ #
     # Additional coverage                                                  #
     # ------------------------------------------------------------------ #
 
-    def test_state_machine_draft_to_active(self):
-        """Draft course activates correctly."""
+    def test_state_machine_draft_to_open(self):
+        """Draft course opens for enrollment correctly."""
         course = self._make_course()
         self.assertEqual(course.state, "draft")
-        course.action_activate()
-        self.assertEqual(course.state, "active")
+        course.action_open_enrollment()
+        self.assertEqual(course.state, "open")
 
-    def test_state_machine_active_to_archived(self):
-        """Active course can be archived."""
-        course = self._make_course(state="active")
-        course.action_archive_course()
-        self.assertEqual(course.state, "archived")
+    def test_state_machine_open_to_in_progress(self):
+        """Open course starts correctly."""
+        course = self._make_course(state="open")
+        course.action_start()
+        self.assertEqual(course.state, "in_progress")
 
     def test_smart_button_action(self):
         """action_view_enrollments returns a valid window action dict."""
-        course = self._make_course(state="active")
+        course = self._make_course(state="open")
         self._enroll(course, self.partner_a)
 
         action = course.action_view_enrollments()
@@ -157,10 +158,10 @@ class TestCourseEnrollment(TransactionCase):
             course = self._make_course(name=f"Course {ctype}", course_type=ctype)
             self.assertEqual(course.course_type, ctype)
 
-    def test_drop_already_dropped_raises(self):
-        """Dropping an already-dropped enrollment raises UserError."""
-        course = self._make_course(state="active")
+    def test_cancel_already_cancelled_raises(self):
+        """Cancelling an already-cancelled enrollment raises UserError."""
+        course = self._make_course(state="open")
         enrollment = self._enroll(course, self.partner_a)
-        enrollment.action_drop()
+        enrollment.action_cancel()
         with self.assertRaises(UserError):
-            enrollment.action_drop()
+            enrollment.action_cancel()

@@ -10,29 +10,47 @@ class InstructorEnrollment(models.Model):
 
     course_id = fields.Many2one(
         "instructor.course",
+        string="Course",
         required=True,
         ondelete="restrict",
         index=True,
     )
     partner_id = fields.Many2one(
         "res.partner",
+        string="Participant",
         required=True,
         index=True,
+        ondelete="restrict",
     )
-    enrollment_date = fields.Date(default=fields.Date.today)
+    enrollment_date = fields.Date(
+        string="Enrollment Date",
+        default=fields.Date.today,
+        required=True,
+    )
     state = fields.Selection(
         [
-            ("enrolled", "Enrolled"),
+            ("pending", "Pending"),
+            ("confirmed", "Confirmed"),
             ("completed", "Completed"),
-            ("dropped", "Dropped"),
+            ("cancelled", "Cancelled"),
         ],
-        default="enrolled",
+        default="pending",
         required=True,
         tracking=True,
     )
     completion_date = fields.Date()
     certificate_number = fields.Char()
-    notes = fields.Text()
+    notes = fields.Text(string="Notes")
+    payment_status = fields.Selection(
+        [
+            ("unpaid", "Unpaid"),
+            ("paid", "Paid"),
+        ],
+        string="Payment",
+        default="unpaid",
+        required=True,
+        tracking=True,
+    )
 
     # ------------------------------------------------------------------ #
     # SQL constraints                                                      #
@@ -51,39 +69,44 @@ class InstructorEnrollment(models.Model):
     # ------------------------------------------------------------------ #
 
     @api.constrains("course_id", "state")
-    def _check_course_not_archived(self):
+    def _check_course_not_cancelled(self):
         for enrollment in self:
-            if enrollment.course_id.state == "archived" and enrollment.state == "enrolled":
+            if enrollment.course_id.state == "cancelled" and enrollment.state == "pending":
                 raise ValidationError(
-                    _("Cannot enroll in an archived course: %s") % enrollment.course_id.name
+                    _("Cannot enroll in a cancelled course: %s") % enrollment.course_id.name
                 )
 
     # ------------------------------------------------------------------ #
     # State-machine actions                                                #
     # ------------------------------------------------------------------ #
 
+    def action_confirm(self):
+        for enrollment in self:
+            if enrollment.state != "pending":
+                raise UserError(_("Only pending enrollments can be confirmed."))
+            enrollment.state = "confirmed"
+
     def action_complete(self):
         for enrollment in self:
-            if enrollment.state != "enrolled":
-                raise UserError(_("Only enrolled participants can be marked as completed."))
+            if enrollment.state != "confirmed":
+                raise UserError(_("Only confirmed enrollments can be completed."))
             enrollment.state = "completed"
 
-    def action_drop(self):
+    def action_cancel(self):
         for enrollment in self:
-            if enrollment.state == "dropped":
-                raise UserError(_("Enrollment is already dropped."))
-            enrollment.state = "dropped"
+            if enrollment.state in ("completed", "cancelled"):
+                raise UserError(_("Cannot cancel a completed or already cancelled enrollment."))
+            enrollment.state = "cancelled"
 
     # ------------------------------------------------------------------ #
-    # Create guard — prevent enrollment in archived course                 #
+    # Create guard — capacity check                                        #
     # ------------------------------------------------------------------ #
 
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)
         for record in records:
-            if record.course_id.state == "archived":
-                raise UserError(
-                    _("Cannot enroll in an archived course: %s") % record.course_id.name
-                )
+            course = record.course_id
+            if course.max_participants and course.available_spots < 0:
+                raise UserError(_("Course '%s' is fully booked.") % course.name)
         return records

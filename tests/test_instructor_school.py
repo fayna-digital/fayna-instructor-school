@@ -1,6 +1,6 @@
 """Integration tests for fayna_instructor_school.
 
-Coverage target: ≥ 70 % (models + state machine + ACL + website route).
+Coverage target: >= 70 % (models + state machine + ACL + website route).
 """
 
 from datetime import date, timedelta
@@ -12,7 +12,7 @@ from odoo.tests.common import HttpCase, TransactionCase
 
 @tagged("post_install", "-at_install")
 class TestInstructorCourse(TransactionCase):
-    """Tests for fayna.instructor.course model."""
+    """Tests for instructor.course model."""
 
     @classmethod
     def setUpClass(cls):
@@ -28,7 +28,7 @@ class TestInstructorCourse(TransactionCase):
             "max_participants": 10,
         }
         vals.update(kw)
-        return self.env["fayna.instructor.course"].create(vals)
+        return self.env["instructor.course"].create(vals)
 
     # ---------------------------------------------------------------- #
     # test_create_course                                                #
@@ -48,7 +48,7 @@ class TestInstructorCourse(TransactionCase):
         course = self._make_course()
         course.action_open_enrollment()
         partner = self.env["res.partner"].create({"name": "Anna Kowalska"})
-        enrollment = self.env["fayna.instructor.enrollment"].create(
+        enrollment = self.env["instructor.enrollment"].create(
             {
                 "course_id": course.id,
                 "partner_id": partner.id,
@@ -65,14 +65,14 @@ class TestInstructorCourse(TransactionCase):
         course = self._make_course()
         course.action_open_enrollment()
         partner = self.env["res.partner"].create({"name": "Duplicate User"})
-        self.env["fayna.instructor.enrollment"].create(
+        self.env["instructor.enrollment"].create(
             {"course_id": course.id, "partner_id": partner.id}
         )
         from odoo.tools import mute_logger
         from psycopg2 import IntegrityError
 
         with mute_logger("odoo.sql_db"), self.assertRaises((IntegrityError, Exception)):
-            self.env["fayna.instructor.enrollment"].create(
+            self.env["instructor.enrollment"].create(
                 {"course_id": course.id, "partner_id": partner.id}
             )
 
@@ -84,7 +84,7 @@ class TestInstructorCourse(TransactionCase):
         course.action_open_enrollment()
         for i in range(3):
             p = self.env["res.partner"].create({"name": f"Participant {i}"})
-            self.env["fayna.instructor.enrollment"].create(
+            self.env["instructor.enrollment"].create(
                 {"course_id": course.id, "partner_id": p.id}
             )
         self.assertEqual(course.enrolled_count, 3)
@@ -118,7 +118,7 @@ class TestInstructorCourse(TransactionCase):
         course = self._make_course()
         course.action_open_enrollment()
         partner = self.env["res.partner"].create({"name": "Bob"})
-        enrollment = self.env["fayna.instructor.enrollment"].create(
+        enrollment = self.env["instructor.enrollment"].create(
             {"course_id": course.id, "partner_id": partner.id}
         )
         enrollment.action_confirm()
@@ -133,7 +133,7 @@ class TestInstructorCourse(TransactionCase):
     # ---------------------------------------------------------------- #
     def test_date_constraint_end_before_start(self):
         with self.assertRaises((UserError, ValidationError)):
-            self.env["fayna.instructor.course"].create(
+            self.env["instructor.course"].create(
                 {
                     "name": "Bad Dates",
                     "start_date": self.next_week,
@@ -144,13 +144,13 @@ class TestInstructorCourse(TransactionCase):
 
 @tagged("post_install", "-at_install")
 class TestInstructorEnrollment(TransactionCase):
-    """Tests for fayna.instructor.enrollment model."""
+    """Tests for instructor.enrollment model."""
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.today = date.today()
-        cls.course = cls.env["fayna.instructor.course"].create(
+        cls.course = cls.env["instructor.course"].create(
             {
                 "name": "Enrollment Test Course",
                 "start_date": cls.today + timedelta(days=5),
@@ -161,7 +161,7 @@ class TestInstructorEnrollment(TransactionCase):
         cls.partner = cls.env["res.partner"].create({"name": "Test Student"})
 
     def _enroll(self, partner=None, course=None):
-        return self.env["fayna.instructor.enrollment"].create(
+        return self.env["instructor.enrollment"].create(
             {
                 "course_id": (course or self.course).id,
                 "partner_id": (partner or self.partner).id,
@@ -183,7 +183,7 @@ class TestInstructorEnrollment(TransactionCase):
         )
         # Simulate controller behavior: sudo() create on behalf of partner
         enrollment = (
-            self.env["fayna.instructor.enrollment"]
+            self.env["instructor.enrollment"]
             .sudo()
             .create(
                 {
@@ -224,7 +224,7 @@ class TestInstructorSchoolWebsite(HttpCase):
 
     def test_website_page_lists_open_courses(self):
         """Open courses appear on the public page."""
-        self.env["fayna.instructor.course"].create(
+        self.env["instructor.course"].create(
             {
                 "name": "Visible Open Course",
                 "start_date": date.today() + timedelta(days=3),
@@ -236,7 +236,7 @@ class TestInstructorSchoolWebsite(HttpCase):
 
     def test_enroll_redirect_unauthenticated(self):
         """Unauthenticated enroll redirects to login (302)."""
-        course = self.env["fayna.instructor.course"].create(
+        course = self.env["instructor.course"].create(
             {
                 "name": "Auth Required Course",
                 "start_date": date.today() + timedelta(days=3),

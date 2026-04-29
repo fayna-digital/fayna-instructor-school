@@ -4,7 +4,7 @@
         <!-- Portal users see only their own enrollments -->
         <record id="rule_enrollment_portal_own" model="ir.rule">
             <field name="name">Enrollment: portal sees own only</field>
-            <field name="model_id" ref="model_fayna_instructor_enrollment"/>
+            <field name="model_id" ref="model_instructor_enrollment"/>
             <field name="domain_force">[('partner_id', '=', user.partner_id.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
             <field name="perm_read" eval="True"/>
@@ -16,7 +16,7 @@
         <!-- Internal users see all enrollments -->
         <record id="rule_enrollment_internal_all" model="ir.rule">
             <field name="name">Enrollment: internal sees all</field>
-            <field name="model_id" ref="model_fayna_instructor_enrollment"/>
+            <field name="model_id" ref="model_instructor_enrollment"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>

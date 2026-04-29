@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- ============================================================ -->
-    <!--  List (tree) view                                             -->
+    <!--  List (tree) view — richer state + payment_status            -->
     <!-- ============================================================ -->
     <record id="fayna_instructor_enrollment_tree" model="ir.ui.view">
-        <field name="name">fayna.instructor.enrollment.tree</field>
-        <field name="model">fayna.instructor.enrollment</field>
+        <field name="name">instructor.enrollment.tree.extended</field>
+        <field name="model">instructor.enrollment</field>
+        <field name="priority">8</field>
         <field name="arch" type="xml">
             <tree decoration-muted="state == 'cancelled'"
                   decoration-success="state == 'confirmed'"
@@ -26,85 +27,12 @@
     </record>
 
     <!-- ============================================================ -->
-    <!--  Form view                                                    -->
-    <!-- ============================================================ -->
-    <record id="fayna_instructor_enrollment_form" model="ir.ui.view">
-        <field name="name">fayna.instructor.enrollment.form</field>
-        <field name="model">fayna.instructor.enrollment</field>
-        <field name="arch" type="xml">
-            <form>
-                <header>
-                    <button name="action_confirm" type="object"
-                            string="Confirm"
-                            class="btn-primary"
-                            invisible="state != 'pending'"/>
-                    <button name="action_complete" type="object"
-                            string="Complete"
-                            class="btn-success"
-                            invisible="state != 'confirmed'"/>
-                    <button name="action_cancel" type="object"
-                            string="Cancel"
-                            class="btn-danger"
-                            invisible="state in ('completed', 'cancelled')"/>
-                    <field name="state" widget="statusbar"
-                           statusbar_visible="pending,confirmed,completed"/>
-                </header>
-                <sheet>
-                    <group>
-                        <group string="Enrollment">
-                            <field name="course_id"/>
-                            <field name="partner_id"/>
-                            <field name="enrollment_date"/>
-                        </group>
-                        <group string="Payment">
-                            <field name="payment_status"/>
-                        </group>
-                    </group>
-                    <group string="Notes">
-                        <field name="notes" nolabel="1"/>
-                    </group>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
-            </form>
-        </field>
-    </record>
-
-    <!-- ============================================================ -->
-    <!--  Search view                                                  -->
-    <!-- ============================================================ -->
-    <record id="fayna_instructor_enrollment_search" model="ir.ui.view">
-        <field name="name">fayna.instructor.enrollment.search</field>
-        <field name="model">fayna.instructor.enrollment</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="course_id"/>
-                <field name="partner_id"/>
-                <filter string="Pending" name="pending" domain="[('state','=','pending')]"/>
-                <filter string="Confirmed" name="confirmed" domain="[('state','=','confirmed')]"/>
-                <filter string="Completed" name="completed" domain="[('state','=','completed')]"/>
-                <filter string="Cancelled" name="cancelled" domain="[('state','=','cancelled')]"/>
-                <separator/>
-                <filter string="Unpaid" name="unpaid" domain="[('payment_status','=','unpaid')]"/>
-                <filter string="Paid" name="paid" domain="[('payment_status','=','paid')]"/>
-                <group expand="0" string="Group By">
-                    <filter string="Course" name="group_course" context="{'group_by': 'course_id'}"/>
-                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
-                    <filter string="Payment" name="group_payment" context="{'group_by': 'payment_status'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
-
-    <!-- ============================================================ -->
-    <!--  Action                                                       -->
+    <!--  Action (enrollment list entry point)                         -->
     <!-- ============================================================ -->
     <record id="action_fayna_instructor_enrollment" model="ir.actions.act_window">
         <field name="name">Enrollments</field>
-        <field name="res_model">fayna.instructor.enrollment</field>
-        <field name="view_mode">tree,form</field>
-        <field name="search_view_id" ref="fayna_instructor_enrollment_search"/>
+        <field name="res_model">instructor.enrollment</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="instructor_enrollment_search_view"/>
     </record>
 </odoo>

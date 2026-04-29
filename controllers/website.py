@@ -15,7 +15,7 @@ class InstructorSchoolController(http.Controller):
     def instructor_school_page(self, **kwargs):
         """Public listing of open courses."""
         courses = (
-            request.env["fayna.instructor.course"]
+            request.env["instructor.course"]
             .sudo()
             .search([("state", "=", "open")], order="start_date asc")
         )
@@ -37,7 +37,7 @@ class InstructorSchoolController(http.Controller):
         Requires authentication (auth='user').  If the user is not logged in
         Odoo's website module redirects them to the login page automatically.
         """
-        course_model = request.env["fayna.instructor.course"].sudo()
+        course_model = request.env["instructor.course"].sudo()
         course = course_model.browse(course_id).exists()
 
         if not course or course.state != "open":
@@ -48,7 +48,7 @@ class InstructorSchoolController(http.Controller):
 
         # Check for existing enrollment
         existing = (
-            request.env["fayna.instructor.enrollment"]
+            request.env["instructor.enrollment"]
             .sudo()
             .search(
                 [("course_id", "=", course.id), ("partner_id", "=", partner.id)],
@@ -66,7 +66,7 @@ class InstructorSchoolController(http.Controller):
             return request.redirect("/instructor-school")
 
         # Create the enrollment as the portal user via sudo (portal can create own)
-        request.env["fayna.instructor.enrollment"].sudo().create(
+        request.env["instructor.enrollment"].sudo().create(
             {
                 "course_id": course.id,
                 "partner_id": partner.id,

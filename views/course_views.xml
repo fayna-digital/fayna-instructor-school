@@ -7,18 +7,27 @@
         <field name="name">instructor.course.tree</field>
         <field name="model">instructor.course</field>
         <field name="arch" type="xml">
-            <tree decoration-muted="state == 'archived'"
-                  decoration-success="state == 'active'">
+            <tree decoration-muted="state == 'cancelled'"
+                  decoration-success="state == 'open'"
+                  decoration-info="state == 'in_progress'">
                 <field name="name"/>
                 <field name="course_type"/>
-                <field name="duration_hours"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="location" optional="show"/>
+                <field name="duration_hours" optional="hide"/>
                 <field name="max_participants"/>
-                <field name="enrollment_count"/>
+                <field name="enrolled_count"/>
+                <field name="available_spots"/>
+                <field name="price" widget="monetary" optional="show"/>
+                <field name="currency_id" optional="hide"/>
                 <field name="website_published" optional="show"/>
                 <field name="state"
                        widget="badge"
-                       decoration-success="state == 'active'"
-                       decoration-muted="state == 'archived'"/>
+                       decoration-success="state == 'open'"
+                       decoration-info="state == 'in_progress'"
+                       decoration-primary="state == 'completed'"
+                       decoration-muted="state in ('draft', 'cancelled')"/>
             </tree>
         </field>
     </record>
@@ -32,19 +41,24 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_activate" type="object"
-                            string="Activate"
+                    <button name="action_open_enrollment" type="object"
+                            string="Open Enrollment"
                             class="btn-primary"
                             invisible="state != 'draft'"/>
-                    <button name="action_archive_course" type="object"
-                            string="Archive"
-                            class="btn-secondary"
-                            invisible="state in ('draft', 'archived')"/>
-                    <button name="action_reset_draft" type="object"
-                            string="Reset to Draft"
-                            invisible="state != 'archived'"/>
+                    <button name="action_start" type="object"
+                            string="Start Course"
+                            class="btn-primary"
+                            invisible="state != 'open'"/>
+                    <button name="action_complete" type="object"
+                            string="Complete"
+                            class="btn-success"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_cancel" type="object"
+                            string="Cancel"
+                            class="btn-danger"
+                            invisible="state in ('completed', 'cancelled')"/>
                     <field name="state" widget="statusbar"
-                           statusbar_visible="draft,active,archived"/>
+                           statusbar_visible="draft,open,in_progress,completed"/>
                 </header>
                 <sheet>
                     <!-- Smart button: enrollment count -->
@@ -64,13 +78,48 @@
                         <group string="Course Details">
                             <field name="course_type"/>
                             <field name="duration_hours"/>
-                            <field name="max_participants"/>
                             <field name="website_published"/>
+                        </group>
+                        <group string="Schedule &amp; Location">
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="location"/>
+                        </group>
+                        <group string="Capacity &amp; Pricing">
+                            <field name="max_participants"/>
+                            <field name="enrolled_count"/>
+                            <field name="available_spots"/>
+                            <field name="currency_id" options="{'no_create': True}"/>
+                            <field name="price" widget="monetary"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Description">
                             <field name="description" widget="html"/>
+                        </page>
+                        <page string="Enrollments">
+                            <field name="enrollment_ids" context="{'default_course_id': active_id}">
+                                <tree editable="bottom"
+                                      decoration-muted="state == 'cancelled'"
+                                      decoration-success="state == 'confirmed'">
+                                    <field name="partner_id"/>
+                                    <field name="enrollment_date"/>
+                                    <field name="payment_status" widget="badge"
+                                           decoration-success="payment_status == 'paid'"
+                                           decoration-warning="payment_status == 'unpaid'"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'confirmed'"
+                                           decoration-info="state == 'pending'"
+                                           decoration-muted="state == 'cancelled'"
+                                           decoration-primary="state == 'completed'"/>
+                                    <button name="action_confirm" type="object"
+                                            string="Confirm" icon="fa-check"
+                                            invisible="state != 'pending'"/>
+                                    <button name="action_cancel" type="object"
+                                            string="Cancel" icon="fa-times"
+                                            invisible="state in ('cancelled', 'completed')"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>
@@ -92,14 +141,19 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
+                <field name="location"/>
                 <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
-                <filter string="Active" name="active_state" domain="[('state','=','active')]"/>
-                <filter string="Archived" name="archived_state" domain="[('state','=','archived')]"/>
+                <filter string="Open" name="open" domain="[('state','=','open')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('state','=','in_progress')]"/>
+                <filter string="Completed" name="completed" domain="[('state','=','completed')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state','=','cancelled')]"/>
                 <separator/>
+                <filter string="Has Spots" name="has_spots" domain="[('available_spots','>',0)]"/>
                 <filter string="Published" name="published" domain="[('website_published','=',True)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
                     <filter string="Course Type" name="group_type" context="{'group_by': 'course_type'}"/>
+                    <filter string="Start Date" name="group_start" context="{'group_by': 'start_date:month'}"/>
                 </group>
             </search>
         </field>

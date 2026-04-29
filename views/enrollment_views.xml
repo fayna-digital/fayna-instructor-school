@@ -7,18 +7,21 @@
         <field name="name">instructor.enrollment.tree</field>
         <field name="model">instructor.enrollment</field>
         <field name="arch" type="xml">
-            <tree decoration-muted="state == 'dropped'"
+            <tree decoration-muted="state == 'cancelled'"
                   decoration-success="state == 'completed'">
                 <field name="course_id"/>
                 <field name="partner_id"/>
                 <field name="enrollment_date"/>
+                <field name="payment_status" widget="badge"
+                       decoration-success="payment_status == 'paid'"
+                       decoration-warning="payment_status == 'unpaid'"/>
                 <field name="completion_date" optional="show"/>
                 <field name="certificate_number" optional="hide"/>
                 <field name="state"
                        widget="badge"
-                       decoration-info="state == 'enrolled'"
-                       decoration-success="state == 'completed'"
-                       decoration-muted="state == 'dropped'"/>
+                       decoration-info="state == 'pending'"
+                       decoration-success="state in ('confirmed', 'completed')"
+                       decoration-muted="state == 'cancelled'"/>
             </tree>
         </field>
     </record>
@@ -32,16 +35,20 @@
         <field name="arch" type="xml">
             <form>
                 <header>
+                    <button name="action_confirm" type="object"
+                            string="Confirm"
+                            class="btn-primary"
+                            invisible="state != 'pending'"/>
                     <button name="action_complete" type="object"
                             string="Mark Completed"
                             class="btn-success"
-                            invisible="state != 'enrolled'"/>
-                    <button name="action_drop" type="object"
-                            string="Drop"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_cancel" type="object"
+                            string="Cancel"
                             class="btn-secondary"
-                            invisible="state != 'enrolled'"/>
+                            invisible="state in ('completed', 'cancelled')"/>
                     <field name="state" widget="statusbar"
-                           statusbar_visible="enrolled,completed"/>
+                           statusbar_visible="pending,confirmed,completed"/>
                 </header>
                 <sheet>
                     <group>
@@ -53,6 +60,7 @@
                         <group string="Completion">
                             <field name="completion_date"/>
                             <field name="certificate_number"/>
+                            <field name="payment_status"/>
                         </group>
                     </group>
                     <group string="Notes">
@@ -77,12 +85,17 @@
             <search>
                 <field name="course_id"/>
                 <field name="partner_id"/>
-                <filter string="Enrolled" name="enrolled" domain="[('state','=','enrolled')]"/>
+                <filter string="Pending" name="pending" domain="[('state','=','pending')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state','=','confirmed')]"/>
                 <filter string="Completed" name="completed" domain="[('state','=','completed')]"/>
-                <filter string="Dropped" name="dropped" domain="[('state','=','dropped')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state','=','cancelled')]"/>
+                <separator/>
+                <filter string="Unpaid" name="unpaid" domain="[('payment_status','=','unpaid')]"/>
+                <filter string="Paid" name="paid" domain="[('payment_status','=','paid')]"/>
                 <group expand="0" string="Group By">
                     <filter string="Course" name="group_course" context="{'group_by': 'course_id'}"/>
                     <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Payment" name="group_payment" context="{'group_by': 'payment_status'}"/>
                 </group>
             </search>
         </field>
@@ -94,7 +107,7 @@
     <record id="action_instructor_enrollment" model="ir.actions.act_window">
         <field name="name">Enrollments</field>
         <field name="res_model">instructor.enrollment</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="instructor_enrollment_search_view"/>
     </record>
 </odoo>
