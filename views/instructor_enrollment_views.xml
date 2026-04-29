@@ -33,6 +33,5 @@
         <field name="name">Enrollments</field>
         <field name="res_model">instructor.enrollment</field>
         <field name="view_mode">list,form</field>
-        <field name="search_view_id" ref="instructor_enrollment_search_view"/>
     </record>
 </odoo>
