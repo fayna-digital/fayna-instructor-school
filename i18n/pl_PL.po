@@ -289,3 +289,15 @@ msgstr "Ta osoba jest już zapisana na ten kurs."
 #. module: fayna_instructor_school
 msgid "Website Published"
 msgstr "Opublikowano na stronie"
+
+#. module: fayna_instructor_school
+msgid "Заповніть ім'я та email."
+msgstr "Wypełnij imię i adres e-mail."
+
+#. module: fayna_instructor_school
+msgid "На жаль, місця закінчились."
+msgstr "Niestety, wszystkie miejsca są zajęte."
+
+#. module: fayna_instructor_school
+msgid "Ця електронна адреса вже зареєстрована на цей курс."
+msgstr "Ten adres e-mail jest już zarejestrowany na ten kurs."

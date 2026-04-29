@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- ============================================================ -->
-    <!--  Public website page — /instructor-school                    -->
+    <!--  Public listing page — /instructor-school                    -->
     <!-- ============================================================ -->
-    <template id="instructor_school_page" name="Instructor School — Public Page">
+    <template id="page_instructor_school" name="Школа вожатих — список курсів">
         <t t-call="website.layout">
             <div id="wrap" class="oe_structure">
                 <!-- Hero -->
                 <section class="o_colored_level o_cc o_cc1 pt-5 pb-5 text-center">
                     <div class="container">
-                        <h1 class="display-4 fw-bold">Instructor School</h1>
+                        <h1 class="display-4 fw-bold">Школа вожатих</h1>
                         <p class="lead">
-                            Professional development courses for camp instructors.
-                            Enroll in an open course below.
+                            Навчання вожатих та керівників таборів за програмою MEN (36h/10h)
                         </p>
                     </div>
                 </section>
@@ -22,7 +21,7 @@
                     <div class="container">
                         <t t-if="not courses">
                             <div class="alert alert-info text-center">
-                                No open courses at the moment. Check back soon!
+                                Наразі немає відкритих курсів. Слідкуйте за оновленнями.
                             </div>
                         </t>
                         <div class="row g-4">
@@ -47,7 +46,7 @@
                                                 </li>
                                                 <li>
                                                     <i class="fa fa-users me-1"/>
-                                                    <t t-esc="course.available_spots"/> spots left
+                                                    <t t-esc="course.available_spots"/> місць залишилось
                                                 </li>
                                                 <li t-if="course.price">
                                                     <i class="fa fa-tag me-1"/>
@@ -59,15 +58,15 @@
                                                  class="mb-3 text-muted small"
                                                  t-out="course.description[:300]"/>
                                             <div class="mt-auto">
-                                                <t t-if="course.available_spots > 0">
-                                                    <a t-attf-href="/instructor-school/enroll/#{course.id}"
+                                                <t t-if="course.available_spots &gt; 0">
+                                                    <a t-attf-href="/instructor-school/apply/#{course.id}"
                                                        class="btn btn-primary w-100">
-                                                        Enroll Now
+                                                        Записатись
                                                     </a>
                                                 </t>
                                                 <t t-else="">
                                                     <button class="btn btn-secondary w-100" disabled="1">
-                                                        Fully Booked
+                                                        Місця закінчились
                                                     </button>
                                                 </t>
                                             </div>
@@ -83,7 +82,131 @@
     </template>
 
     <!-- ============================================================ -->
-    <!--  Enrollment confirmation page                                 -->
+    <!--  Application form — /instructor-school/apply/<id>            -->
+    <!-- ============================================================ -->
+    <template id="page_instructor_apply" name="Школа вожатих — форма заявки">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <section class="pt-5 pb-5">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-7 col-lg-6">
+
+                                <!-- Success state -->
+                                <t t-if="success">
+                                    <div class="text-center py-5">
+                                        <i class="fa fa-check-circle fa-4x text-success mb-3"/>
+                                        <h2>Заявку прийнято!</h2>
+                                        <p class="lead">
+                                            Ваша заявка на курс
+                                            <strong><t t-esc="course.name"/></strong>
+                                            успішно надіслана.
+                                        </p>
+                                        <p class="text-muted">
+                                            Наша команда підтвердить запис найближчим часом.
+                                        </p>
+                                        <a href="/instructor-school" class="btn btn-outline-primary mt-3">
+                                            Назад до курсів
+                                        </a>
+                                    </div>
+                                </t>
+
+                                <!-- Form state -->
+                                <t t-if="not success">
+                                    <h2 class="mb-1">Записатись на курс</h2>
+                                    <p class="text-muted mb-4">
+                                        <strong><t t-esc="course.name"/></strong>
+                                        <t t-if="course.start_date">
+                                            — початок <t t-esc="course.start_date"/>
+                                        </t>
+                                    </p>
+
+                                    <!-- Error banner -->
+                                    <t t-if="error">
+                                        <div class="alert alert-danger" role="alert">
+                                            <i class="fa fa-exclamation-triangle me-1"/>
+                                            <t t-esc="error"/>
+                                        </div>
+                                    </t>
+
+                                    <!-- Fully booked banner -->
+                                    <t t-if="course.available_spots &lt;= 0 and not error">
+                                        <div class="alert alert-warning text-center">
+                                            <i class="fa fa-ban me-1"/>
+                                            На жаль, всі місця на цей курс зайняті.
+                                        </div>
+                                    </t>
+
+                                    <form t-attf-action="/instructor-school/apply/#{course.id}"
+                                          method="post"
+                                          t-if="course.available_spots &gt; 0">
+                                        <input type="hidden" name="csrf_token"
+                                               t-att-value="request.csrf_token()"/>
+
+                                        <div class="mb-3">
+                                            <label for="applicant_name" class="form-label fw-semibold">
+                                                Ім'я та прізвище <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="applicant_name"
+                                                   name="applicant_name"
+                                                   required="required"
+                                                   placeholder="Іваненко Іван Іванович"/>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="applicant_email" class="form-label fw-semibold">
+                                                Email <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="email"
+                                                   class="form-control"
+                                                   id="applicant_email"
+                                                   name="applicant_email"
+                                                   required="required"
+                                                   placeholder="ivan@example.com"/>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="applicant_phone" class="form-label fw-semibold">
+                                                Телефон
+                                            </label>
+                                            <input type="tel"
+                                                   class="form-control"
+                                                   id="applicant_phone"
+                                                   name="applicant_phone"
+                                                   placeholder="+48 500 000 000"/>
+                                        </div>
+
+                                        <div class="d-grid gap-2">
+                                            <button type="submit" class="btn btn-primary btn-lg">
+                                                Надіслати заявку
+                                            </button>
+                                            <a href="/instructor-school" class="btn btn-outline-secondary">
+                                                Скасувати
+                                            </a>
+                                        </div>
+                                    </form>
+
+                                    <t t-if="course.available_spots &lt;= 0">
+                                        <div class="text-center mt-3">
+                                            <a href="/instructor-school" class="btn btn-outline-primary">
+                                                Назад до курсів
+                                            </a>
+                                        </div>
+                                    </t>
+                                </t>
+
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!--  Enrollment confirmation page (auth=user flow)               -->
     <!-- ============================================================ -->
     <template id="instructor_school_enroll_confirm" name="Instructor School — Enrollment Confirmed">
         <t t-call="website.layout">
@@ -92,16 +215,16 @@
                     <div class="container text-center">
                         <div class="py-5">
                             <i class="fa fa-check-circle fa-4x text-success mb-3"/>
-                            <h2>Enrollment Submitted!</h2>
+                            <h2>Запис підтверджено!</h2>
                             <p class="lead">
-                                You have been enrolled in
+                                Вас записано на курс
                                 <strong><t t-esc="course.name"/></strong>.
                             </p>
                             <p class="text-muted">
-                                Our team will confirm your enrollment shortly.
+                                Наша команда підтвердить ваш запис найближчим часом.
                             </p>
                             <a href="/instructor-school" class="btn btn-outline-primary mt-3">
-                                Back to Courses
+                                Назад до курсів
                             </a>
                         </div>
                     </div>
@@ -111,7 +234,7 @@
     </template>
 
     <!-- ============================================================ -->
-    <!--  Already enrolled page                                        -->
+    <!--  Already enrolled page (auth=user flow)                      -->
     <!-- ============================================================ -->
     <template id="instructor_school_already_enrolled" name="Instructor School — Already Enrolled">
         <t t-call="website.layout">
@@ -120,13 +243,13 @@
                     <div class="container text-center">
                         <div class="py-5">
                             <i class="fa fa-info-circle fa-4x text-info mb-3"/>
-                            <h2>Already Enrolled</h2>
+                            <h2>Ви вже записані</h2>
                             <p class="lead">
-                                You are already enrolled in
+                                Ви вже записані на курс
                                 <strong><t t-esc="course.name"/></strong>.
                             </p>
                             <a href="/instructor-school" class="btn btn-outline-primary mt-3">
-                                Back to Courses
+                                Назад до курсів
                             </a>
                         </div>
                     </div>

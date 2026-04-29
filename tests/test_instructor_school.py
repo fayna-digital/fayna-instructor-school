@@ -248,3 +248,147 @@ class TestInstructorSchoolWebsite(HttpCase):
             allow_redirects=False,
         )
         self.assertIn(response.status_code, (302, 303))
+
+    # ---------------------------------------------------------------- #
+    # New tests — TZ requirements                                       #
+    # ---------------------------------------------------------------- #
+
+    def test_apply_route_returns_200_for_published_course(self):
+        """GET /instructor-school/apply/<id> returns 200 for published course."""
+        course = self.env["instructor.course"].create(
+            {
+                "name": "Published Apply Course",
+                "start_date": date.today() + timedelta(days=5),
+                "state": "open",
+                "website_published": True,
+                "max_participants": 10,
+            }
+        )
+        response = self.url_open(f"/instructor-school/apply/{course.id}")
+        self.assertEqual(response.status_code, 200)
+
+    def test_apply_route_returns_404_for_unpublished_course(self):
+        """GET /instructor-school/apply/<id> returns 404 for unpublished course."""
+        course = self.env["instructor.course"].create(
+            {
+                "name": "Unpublished Apply Course",
+                "start_date": date.today() + timedelta(days=5),
+                "state": "open",
+                "website_published": False,
+                "max_participants": 10,
+            }
+        )
+        response = self.url_open(f"/instructor-school/apply/{course.id}")
+        self.assertEqual(response.status_code, 404)
+
+    def test_apply_post_creates_enrollment_and_partner(self):
+        """POST /instructor-school/apply/<id> creates partner if not exists and enrollment."""
+        import re
+
+        course = self.env["instructor.course"].create(
+            {
+                "name": "Apply POST Course",
+                "start_date": date.today() + timedelta(days=5),
+                "state": "open",
+                "website_published": True,
+                "max_participants": 10,
+            }
+        )
+        email = "newapplicant_unique@example.com"
+        # Ensure partner does not exist
+        self.env["res.partner"].search([("email", "=", email)]).unlink()
+
+        # First GET to capture CSRF token from the rendered form
+        get_res = self.url_open(f"/instructor-school/apply/{course.id}")
+        self.assertEqual(get_res.status_code, 200)
+        m = re.search(r'name="csrf_token"\s+value="([^"]+)"', get_res.text)
+        self.assertTrue(m, "csrf_token must be present in apply form")
+        csrf_token = m.group(1)
+
+        response = self.url_open(
+            f"/instructor-school/apply/{course.id}",
+            data={
+                "applicant_name": "Новий Учасник",
+                "applicant_email": email,
+                "applicant_phone": "+380501234567",
+                "csrf_token": csrf_token,
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+
+        partner = self.env["res.partner"].search([("email", "=", email)], limit=1)
+        self.assertTrue(partner, "Partner should have been created by the apply route")
+
+        enrollment = self.env["instructor.enrollment"].search(
+            [("course_id", "=", course.id), ("partner_id", "=", partner.id)], limit=1
+        )
+        self.assertTrue(enrollment, "Enrollment should have been created")
+        self.assertEqual(enrollment.state, "pending")
+
+    def test_listing_only_shows_published_courses(self):
+        """Public listing only shows website_published=True courses."""
+        published = self.env["instructor.course"].create(
+            {
+                "name": "Should Appear Published",
+                "start_date": date.today() + timedelta(days=2),
+                "state": "open",
+                "website_published": True,
+            }
+        )
+        unpublished = self.env["instructor.course"].create(
+            {
+                "name": "Should NOT Appear Hidden",
+                "start_date": date.today() + timedelta(days=3),
+                "state": "open",
+                "website_published": False,
+            }
+        )
+        response = self.url_open("/instructor-school")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(published.name.encode(), response.content)
+        self.assertNotIn(unpublished.name.encode(), response.content)
+
+    def test_seats_available_decreases_after_enrollment(self):
+        """available_spots decreases after enrollment is created."""
+        course = self.env["instructor.course"].create(
+            {
+                "name": "Capacity Check Course",
+                "state": "open",
+                "max_participants": 5,
+                "website_published": True,
+            }
+        )
+        self.assertEqual(course.available_spots, 5)
+
+        partner = self.env["res.partner"].create({"name": "Spot Taker"})
+        self.env["instructor.enrollment"].create(
+            {"course_id": course.id, "partner_id": partner.id}
+        )
+        self.assertEqual(course.available_spots, 4)
+
+    def test_enrollment_state_machine_pending_to_confirmed_to_cancelled(self):
+        """Enrollment state machine: pending → confirmed → cancelled raises UserError."""
+        course = self.env["instructor.course"].create(
+            {
+                "name": "State Machine Course",
+                "state": "open",
+                "max_participants": 10,
+            }
+        )
+        partner = self.env["res.partner"].create({"name": "State Machine Student"})
+        enrollment = self.env["instructor.enrollment"].create(
+            {"course_id": course.id, "partner_id": partner.id}
+        )
+        self.assertEqual(enrollment.state, "pending")
+
+        enrollment.action_confirm()
+        self.assertEqual(enrollment.state, "confirmed")
+
+        # confirmed → cancel is allowed
+        enrollment.action_cancel()
+        self.assertEqual(enrollment.state, "cancelled")
+
+        # cancelled → cancel again raises
+        from odoo.exceptions import UserError as OdooUserError
+        with self.assertRaises(OdooUserError):
+            enrollment.action_cancel()
