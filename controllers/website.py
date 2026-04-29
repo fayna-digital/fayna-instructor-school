@@ -64,14 +64,12 @@ class InstructorSchoolController(http.Controller):
             elif course.available_spots <= 0:
                 error = _("На жаль, місця закінчились.")
             else:
-                partner = (
-                    request.env["res.partner"]
-                    .sudo()
-                    .search([("email", "=", email)], limit=1)
-                )
+                partner = request.env["res.partner"].sudo().search([("email", "=", email)], limit=1)
                 if not partner:
-                    partner = request.env["res.partner"].sudo().create(
-                        {"name": name, "email": email, "phone": phone}
+                    partner = (
+                        request.env["res.partner"]
+                        .sudo()
+                        .create({"name": name, "email": email, "phone": phone})
                     )
                 # Guard against duplicate application
                 existing = (

@@ -65,9 +65,7 @@ class TestInstructorCourse(TransactionCase):
         course = self._make_course()
         course.action_open_enrollment()
         partner = self.env["res.partner"].create({"name": "Duplicate User"})
-        self.env["instructor.enrollment"].create(
-            {"course_id": course.id, "partner_id": partner.id}
-        )
+        self.env["instructor.enrollment"].create({"course_id": course.id, "partner_id": partner.id})
         from odoo.tools import mute_logger
         from psycopg2 import IntegrityError
 
@@ -84,9 +82,7 @@ class TestInstructorCourse(TransactionCase):
         course.action_open_enrollment()
         for i in range(3):
             p = self.env["res.partner"].create({"name": f"Participant {i}"})
-            self.env["instructor.enrollment"].create(
-                {"course_id": course.id, "partner_id": p.id}
-            )
+            self.env["instructor.enrollment"].create({"course_id": course.id, "partner_id": p.id})
         self.assertEqual(course.enrolled_count, 3)
         self.assertEqual(course.available_spots, 0)
 
@@ -361,9 +357,7 @@ class TestInstructorSchoolWebsite(HttpCase):
         self.assertEqual(course.available_spots, 5)
 
         partner = self.env["res.partner"].create({"name": "Spot Taker"})
-        self.env["instructor.enrollment"].create(
-            {"course_id": course.id, "partner_id": partner.id}
-        )
+        self.env["instructor.enrollment"].create({"course_id": course.id, "partner_id": partner.id})
         self.assertEqual(course.available_spots, 4)
 
     def test_enrollment_state_machine_pending_to_confirmed_to_cancelled(self):
@@ -390,5 +384,6 @@ class TestInstructorSchoolWebsite(HttpCase):
 
         # cancelled → cancel again raises
         from odoo.exceptions import UserError as OdooUserError
+
         with self.assertRaises(OdooUserError):
             enrollment.action_cancel()

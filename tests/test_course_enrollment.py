@@ -8,7 +8,7 @@ Covers the 5 required test cases:
   - test_cancelled_course_cannot_enroll
 """
 
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
