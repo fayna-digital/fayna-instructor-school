@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!--  Tree view                                                    -->
+    <!-- ============================================================ -->
+    <record id="instructor_enrollment_list" model="ir.ui.view">
+        <field name="name">instructor.enrollment.tree</field>
+        <field name="model">instructor.enrollment</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="state == 'dropped'"
+                  decoration-success="state == 'completed'">
+                <field name="course_id"/>
+                <field name="partner_id"/>
+                <field name="enrollment_date"/>
+                <field name="completion_date" optional="show"/>
+                <field name="certificate_number" optional="hide"/>
+                <field name="state"
+                       widget="badge"
+                       decoration-info="state == 'enrolled'"
+                       decoration-success="state == 'completed'"
+                       decoration-muted="state == 'dropped'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  Form view                                                    -->
+    <!-- ============================================================ -->
+    <record id="instructor_enrollment_form_view" model="ir.ui.view">
+        <field name="name">instructor.enrollment.form</field>
+        <field name="model">instructor.enrollment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_complete" type="object"
+                            string="Mark Completed"
+                            class="btn-success"
+                            invisible="state != 'enrolled'"/>
+                    <button name="action_drop" type="object"
+                            string="Drop"
+                            class="btn-secondary"
+                            invisible="state != 'enrolled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="enrolled,completed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Enrollment">
+                            <field name="course_id"/>
+                            <field name="partner_id"/>
+                            <field name="enrollment_date"/>
+                        </group>
+                        <group string="Completion">
+                            <field name="completion_date"/>
+                            <field name="certificate_number"/>
+                        </group>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  Search view                                                  -->
+    <!-- ============================================================ -->
+    <record id="instructor_enrollment_search_view" model="ir.ui.view">
+        <field name="name">instructor.enrollment.search</field>
+        <field name="model">instructor.enrollment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="course_id"/>
+                <field name="partner_id"/>
+                <filter string="Enrolled" name="enrolled" domain="[('state','=','enrolled')]"/>
+                <filter string="Completed" name="completed" domain="[('state','=','completed')]"/>
+                <filter string="Dropped" name="dropped" domain="[('state','=','dropped')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Course" name="group_course" context="{'group_by': 'course_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  Action                                                       -->
+    <!-- ============================================================ -->
+    <record id="action_instructor_enrollment" model="ir.actions.act_window">
+        <field name="name">Enrollments</field>
+        <field name="res_model">instructor.enrollment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="instructor_enrollment_search_view"/>
+    </record>
+</odoo>

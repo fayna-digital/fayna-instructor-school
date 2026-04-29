@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!--  Tree view                                                    -->
+    <!-- ============================================================ -->
+    <record id="instructor_course_list" model="ir.ui.view">
+        <field name="name">instructor.course.tree</field>
+        <field name="model">instructor.course</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="state == 'archived'"
+                  decoration-success="state == 'active'">
+                <field name="name"/>
+                <field name="course_type"/>
+                <field name="duration_hours"/>
+                <field name="max_participants"/>
+                <field name="enrollment_count"/>
+                <field name="website_published" optional="show"/>
+                <field name="state"
+                       widget="badge"
+                       decoration-secondary="state == 'draft'"
+                       decoration-success="state == 'active'"
+                       decoration-muted="state == 'archived'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  Form view                                                    -->
+    <!-- ============================================================ -->
+    <record id="instructor_course_form_view" model="ir.ui.view">
+        <field name="name">instructor.course.form</field>
+        <field name="model">instructor.course</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_activate" type="object"
+                            string="Activate"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_archive_course" type="object"
+                            string="Archive"
+                            class="btn-secondary"
+                            invisible="state in ('draft', 'archived')"/>
+                    <button name="action_reset_draft" type="object"
+                            string="Reset to Draft"
+                            invisible="state != 'archived'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,active,archived"/>
+                </header>
+                <sheet>
+                    <!-- Smart button: enrollment count -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_enrollments"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-users">
+                            <field name="enrollment_count" widget="statinfo"
+                                   string="Enrollments"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Course name…"/></h1>
+                    </div>
+                    <group>
+                        <group string="Course Details">
+                            <field name="course_type"/>
+                            <field name="duration_hours"/>
+                            <field name="max_participants"/>
+                            <field name="website_published"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description" widget="html"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  Search view                                                  -->
+    <!-- ============================================================ -->
+    <record id="instructor_course_search_view" model="ir.ui.view">
+        <field name="name">instructor.course.search</field>
+        <field name="model">instructor.course</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Active" name="active_state" domain="[('state','=','active')]"/>
+                <filter string="Archived" name="archived_state" domain="[('state','=','archived')]"/>
+                <separator/>
+                <filter string="Published" name="published" domain="[('website_published','=',True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Course Type" name="group_type" context="{'group_by': 'course_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  Action                                                       -->
+    <!-- ============================================================ -->
+    <record id="action_instructor_course" model="ir.actions.act_window">
+        <field name="name">Courses</field>
+        <field name="res_model">instructor.course</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="instructor_course_search_view"/>
+    </record>
+</odoo>

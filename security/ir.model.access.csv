@@ -5,3 +5,7 @@ access_fayna_instructor_course_portal,fayna.instructor.course portal,model_fayna
 access_fayna_instructor_enrollment_manager,fayna.instructor.enrollment manager,model_fayna_instructor_enrollment,base.group_system,1,1,1,1
 access_fayna_instructor_enrollment_user,fayna.instructor.enrollment user,model_fayna_instructor_enrollment,base.group_user,1,1,1,0
 access_fayna_instructor_enrollment_portal,fayna.instructor.enrollment portal,model_fayna_instructor_enrollment,base.group_portal,1,1,1,0
+access_instructor_course_manager,instructor.course manager,model_instructor_course,base.group_system,1,1,1,1
+access_instructor_course_user,instructor.course user,model_instructor_course,base.group_user,1,1,1,0
+access_instructor_enrollment_manager,instructor.enrollment manager,model_instructor_enrollment,base.group_system,1,1,1,1
+access_instructor_enrollment_user,instructor.enrollment user,model_instructor_enrollment,base.group_user,1,1,1,0

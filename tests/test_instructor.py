@@ -1,5 +1,3 @@
-from datetime import date
-
 from odoo.tests.common import TransactionCase
 
 
@@ -8,8 +6,9 @@ class TestInstructor(TransactionCase):
         course = self.env["instructor.course"].create(
             {
                 "name": "Leadership",
-                "category": "child_psychology",
-                "start_date": date.today(),
+                "course_type": "wychowawca",
+                "duration_hours": 36.0,
             }
         )
-        self.assertTrue(course.certificate_issued)
+        self.assertEqual(course.name, "Leadership")
+        self.assertEqual(course.state, "draft")

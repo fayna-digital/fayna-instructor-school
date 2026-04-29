@@ -189,3 +189,103 @@ msgstr "Ta osoba jest już zapisana na kurs."
 #. module: fayna_instructor_school
 msgid "Unpaid"
 msgstr "Nieopłacone"
+
+#. module: fayna_instructor_school
+msgid "Activate"
+msgstr "Aktywuj"
+
+#. module: fayna_instructor_school
+msgid "Active"
+msgstr "Aktywny"
+
+#. module: fayna_instructor_school
+msgid "Archive"
+msgstr "Archiwizuj"
+
+#. module: fayna_instructor_school
+msgid "Archived"
+msgstr "Zarchiwizowany"
+
+#. module: fayna_instructor_school
+msgid "Cannot enroll in an archived course: %s"
+msgstr "Nie można zapisać się na zarchiwizowany kurs: %s"
+
+#. module: fayna_instructor_school
+msgid "Certificate Number"
+msgstr "Numer certyfikatu"
+
+#. module: fayna_instructor_school
+msgid "Completion Date"
+msgstr "Data ukończenia"
+
+#. module: fayna_instructor_school
+msgid "Course Type"
+msgstr "Typ kursu"
+
+#. module: fayna_instructor_school
+msgid "Drop"
+msgstr "Rezygnuj"
+
+#. module: fayna_instructor_school
+msgid "Dropped"
+msgstr "Rezygnacja"
+
+#. module: fayna_instructor_school
+msgid "Duration (hours)"
+msgstr "Czas trwania (godziny)"
+
+#. module: fayna_instructor_school
+msgid "Enrollment is already dropped."
+msgstr "Zapis jest już anulowany."
+
+#. module: fayna_instructor_school
+msgid "First aid / BLS"
+msgstr "Pierwsza pomoc / BLS"
+
+#. module: fayna_instructor_school
+msgid "Instructor Course"
+msgstr "Kurs instruktora"
+
+#. module: fayna_instructor_school
+msgid "Instructor Enrollment"
+msgstr "Zapis na kurs instruktora"
+
+#. module: fayna_instructor_school
+msgid "Kurs kierownika (10h)"
+msgstr "Kurs kierownika (10h)"
+
+#. module: fayna_instructor_school
+msgid "Kurs wychowawcy (36h)"
+msgstr "Kurs wychowawcy (36h)"
+
+#. module: fayna_instructor_school
+msgid "Mark Completed"
+msgstr "Oznacz jako ukończone"
+
+#. module: fayna_instructor_school
+msgid "Only archived courses can be reset to draft."
+msgstr "Do szkicu można przywrócić tylko zarchiwizowane kursy."
+
+#. module: fayna_instructor_school
+msgid "Only draft courses can be activated."
+msgstr "Aktywować można tylko kursy w statusie «Szkic»."
+
+#. module: fayna_instructor_school
+msgid "Only enrolled participants can be marked as completed."
+msgstr "Jako ukończone można oznaczać tylko zapisanych uczestników."
+
+#. module: fayna_instructor_school
+msgid "Reset to Draft"
+msgstr "Przywróć do szkicu"
+
+#. module: fayna_instructor_school
+msgid "Specialty course"
+msgstr "Kurs specjalistyczny"
+
+#. module: fayna_instructor_school
+msgid "This person is already enrolled in this course."
+msgstr "Ta osoba jest już zapisana na ten kurs."
+
+#. module: fayna_instructor_school
+msgid "Website Published"
+msgstr "Opublikowano na stronie"

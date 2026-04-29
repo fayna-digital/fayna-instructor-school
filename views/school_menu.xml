@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top-level Instructor School menu -->
+    <menuitem id="menu_instructor_school_root"
+              name="Instructor School"
+              sequence="55"
+              web_icon="fayna_instructor_school,static/description/icon.png"/>
+
+    <menuitem id="menu_instructor_school_courses"
+              name="Courses"
+              parent="menu_instructor_school_root"
+              action="action_instructor_course"
+              sequence="10"/>
+
+    <menuitem id="menu_instructor_school_enrollments"
+              name="Enrollments"
+              parent="menu_instructor_school_root"
+              action="action_instructor_enrollment"
+              sequence="20"/>
+</odoo>

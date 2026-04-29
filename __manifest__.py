@@ -1,6 +1,6 @@
 {
     "name": "Fayna Instructor School",
-    "version": "17.0.1.0.0",
+    "version": "17.0.1.1.0",
     "category": "Tools/Camp Management",
     "summary": "Instructor school — courses, enrollment, public website page",
     "description": """
@@ -34,7 +34,10 @@ TZ: fayna-digital-docs/contributing/CAMPSCOUT_MASTER_TZ.md §16 Phase 8
         "data/ir_config_parameter.xml",
         "views/instructor_course_views.xml",
         "views/instructor_enrollment_views.xml",
+        "views/course_views.xml",
+        "views/enrollment_views.xml",
         "views/menu.xml",
+        "views/school_menu.xml",
         "views/website/instructor_school_page.xml",
     ],
     "installable": True,

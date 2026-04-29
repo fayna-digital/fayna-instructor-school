@@ -189,3 +189,103 @@ msgstr "Ця особа вже записана на курс."
 #. module: fayna_instructor_school
 msgid "Unpaid"
 msgstr "Не оплачено"
+
+#. module: fayna_instructor_school
+msgid "Activate"
+msgstr "Активувати"
+
+#. module: fayna_instructor_school
+msgid "Active"
+msgstr "Активний"
+
+#. module: fayna_instructor_school
+msgid "Archive"
+msgstr "Архівувати"
+
+#. module: fayna_instructor_school
+msgid "Archived"
+msgstr "Архівовано"
+
+#. module: fayna_instructor_school
+msgid "Cannot enroll in an archived course: %s"
+msgstr "Неможливо записатися на архівований курс: %s"
+
+#. module: fayna_instructor_school
+msgid "Certificate Number"
+msgstr "Номер сертифіката"
+
+#. module: fayna_instructor_school
+msgid "Completion Date"
+msgstr "Дата завершення"
+
+#. module: fayna_instructor_school
+msgid "Course Type"
+msgstr "Тип курсу"
+
+#. module: fayna_instructor_school
+msgid "Drop"
+msgstr "Відмовитись"
+
+#. module: fayna_instructor_school
+msgid "Dropped"
+msgstr "Відмовився"
+
+#. module: fayna_instructor_school
+msgid "Duration (hours)"
+msgstr "Тривалість (годин)"
+
+#. module: fayna_instructor_school
+msgid "Enrollment is already dropped."
+msgstr "Запис вже скасовано."
+
+#. module: fayna_instructor_school
+msgid "First aid / BLS"
+msgstr "Перша допомога / BLS"
+
+#. module: fayna_instructor_school
+msgid "Instructor Course"
+msgstr "Курс інструктора"
+
+#. module: fayna_instructor_school
+msgid "Instructor Enrollment"
+msgstr "Запис на курс інструктора"
+
+#. module: fayna_instructor_school
+msgid "Kurs kierownika (10h)"
+msgstr "Курс керівника (10 год)"
+
+#. module: fayna_instructor_school
+msgid "Kurs wychowawcy (36h)"
+msgstr "Курс вихователя (36 год)"
+
+#. module: fayna_instructor_school
+msgid "Mark Completed"
+msgstr "Позначити як завершено"
+
+#. module: fayna_instructor_school
+msgid "Only archived courses can be reset to draft."
+msgstr "До чернетки можна повернути лише архівовані курси."
+
+#. module: fayna_instructor_school
+msgid "Only draft courses can be activated."
+msgstr "Активувати можна лише курси у статусі «Чернетка»."
+
+#. module: fayna_instructor_school
+msgid "Only enrolled participants can be marked as completed."
+msgstr "Позначити як завершено можна лише записаних учасників."
+
+#. module: fayna_instructor_school
+msgid "Reset to Draft"
+msgstr "Повернути до чернетки"
+
+#. module: fayna_instructor_school
+msgid "Specialty course"
+msgstr "Спеціалізований курс"
+
+#. module: fayna_instructor_school
+msgid "This person is already enrolled in this course."
+msgstr "Ця особа вже записана на цей курс."
+
+#. module: fayna_instructor_school
+msgid "Website Published"
+msgstr "Опубліковано на сайті"
