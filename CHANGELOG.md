@@ -7,6 +7,25 @@ Versioning: Odoo `17.0.MAJOR.MINOR.PATCH`.
 
 ---
 
+## [17.0.1.2.0] — 2026-04-29
+
+### Added
+- `instructor.enrollment.payment_status` field: `unpaid` / `paid` selection with tracking — enables kitchen/admin to filter paid participants for certificate issuance
+- `instructor.enrollment.action_confirm()` / `action_complete()` / `action_cancel()` state transitions with `UserError` guards
+- `_check_course_not_cancelled` `@api.constrains` — blocks enrollment creation in cancelled courses
+- `create()` capacity guard: raises `UserError` when `available_spots < 0` after insert
+- `_sql_constraints`: unique `(course_id, partner_id)` on `instructor.enrollment` — prevents double enrollment
+- `instructor.course.action_cancel()`: cascades cancellation to all non-completed enrollments
+- `instructor.course.action_complete()`: auto-completes all confirmed enrollments
+
+### Fixed
+- `_compute_enrollment_count` now uses `len()` instead of a domain search — consistent with `enrollment_ids` One2many already loaded in memory
+
+### Security
+- `security/ir_rules.xml`: portal users see only their own enrollments (was unrestricted read for portal group)
+
+---
+
 ## [17.0.1.1.0] — 2026-04-28
 
 ### Added
