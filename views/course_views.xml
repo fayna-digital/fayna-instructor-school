@@ -17,7 +17,6 @@
                 <field name="website_published" optional="show"/>
                 <field name="state"
                        widget="badge"
-                       decoration-secondary="state == 'draft'"
                        decoration-success="state == 'active'"
                        decoration-muted="state == 'archived'"/>
             </tree>
@@ -112,7 +111,7 @@
     <record id="action_instructor_course" model="ir.actions.act_window">
         <field name="name">Courses</field>
         <field name="res_model">instructor.course</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="instructor_course_search_view"/>
     </record>
 </odoo>
