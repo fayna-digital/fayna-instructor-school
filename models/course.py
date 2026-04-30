@@ -52,7 +52,7 @@ class InstructorCourse(models.Model):
         string="Enrollments",
     )
     enrollment_count = fields.Integer(
-        string="Enrollments",
+        string="Total Enrollments",
         compute="_compute_enrollment_count",
         store=True,
     )
