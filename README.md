@@ -1,3 +1,9 @@
+> [!WARNING]
+> **DEPRECATED — Архітектурний pivot 2026-06-07**
+> Цей модуль заморожений і не деплоїться. Весь функціонал переноситься у
+> [`fayna_camp_portal`](https://github.com/VladSh77/fayna-campscout) — єдиний модуль CampScout.
+> Код тут зберігається як reference до завершення міграції.
+
 # Odoo 17 Fayna Instructor School — scaffold (Phase 8)
 
 ![Odoo Version](https://img.shields.io/badge/Odoo-17.0%20Community-purple)
