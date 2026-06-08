@@ -7,6 +7,20 @@ Versioning: Odoo `17.0.MAJOR.MINOR.PATCH`.
 
 ---
 
+## [17.0.1.3.0] — 2026-04-30
+
+### Added
+- `instructor.course` website fields + state extension: `course_type` (wychowawca/kierownik/first_aid/specialty), `start_date`/`end_date` with `_check_dates` constraint, `location`, `price`/`currency_id` (Monetary), `website_published`; state-machine `draft → open → in_progress → completed / cancelled` with `action_open_enrollment`/`action_start`/`action_complete`/`action_cancel` (cascade to enrollments).
+- `instructor.enrollment` state `pending → confirmed → completed / cancelled`; computed `enrollment_count` / `enrolled_count` / `available_spots` on course.
+- Public website routes (`controllers/website.py`): `/instructor-school` (public listing of published open/in-progress courses), `/instructor-school/apply/<id>` (public application form — find-or-create partner + enrollment with duplicate/capacity guard), `/instructor-school/enroll/<id>` (auth=user self-enroll).
+- QWeb page `views/website/instructor_school_page.xml`.
+
+### Notes
+- Module remains **inert** behind feature flag `fayna_instructor_school.active` (default `False`).
+- DEPRECATED per architecture pivot 2026-06-07 — functionality migrates to `fayna_camp_portal`. Repo kept as reference; not deployed.
+
+---
+
 ## [17.0.1.2.0] — 2026-04-29
 
 ### Added

@@ -67,6 +67,15 @@ Module installs as **inert** (feature flag `False`). No behaviour change until f
 
 ---
 
+## Documentation
+
+- [CLAUDE.md](CLAUDE.md) — як працювати з репо (+ банер #4ZONES)
+- [docs/TZ.md](docs/TZ.md) — специфікація (6 областей spec-driven)
+- [docs/PLAN.md](docs/PLAN.md) — dependency graph + фази + checkpoints
+- [CHANGELOG.md](CHANGELOG.md) — історія версій
+
+---
+
 ## License
 
 LGPL-3 — see [LICENSE](LICENSE).
