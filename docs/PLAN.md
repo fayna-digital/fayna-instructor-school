@@ -87,4 +87,4 @@
 ---
 
 ## Зв'язки
-[docs/TZ.md](TZ.md) · [[REPO_STANDARD]] · [[CAMPSCOUT_MASTER_TZ]] §16 · [[claude-memory/project_campscout_arch_pivot_2026-06-07]]
+[docs/TZ.md](TZ.md) · [[REPO_STANDARD]] · [[CAMPSCOUT_MASTER_TZ]] §16

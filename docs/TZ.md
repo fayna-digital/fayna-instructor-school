@@ -125,7 +125,7 @@ def create(self, vals_list):
 
 **Always:**
 - Деплой лише #4ZONES: Mac → GitHub → staging → prod ([[meta/golden-rules-developer]] #3)
-- `chmod -R o+rX` після git pull на сервері ([[claude-memory/feedback_git_pull_permissions]])
+- `chmod -R o+rX` після git pull на сервері ()
 - ≥1 тест на кожен fix; CHANGELOG-запис; Semantic Version bump; синхронізація i18n
 - Feature flag за замовчуванням `False` (Strangler Fig — модуль інертний)
 
@@ -156,7 +156,7 @@ def create(self, vals_list):
 
 ## Open Questions
 
-- Точна межа міграції у `fayna_camp_portal`: що переносити, що архівувати (див. [[claude-memory/project_campscout_arch_pivot_2026-06-07]]).
+- Точна межа міграції у `fayna_camp_portal`: що переносити, що архівувати (див. ).
 - Чи лишати публічну форму заявки тут, чи повністю в єдиному CampScout-модулі.
 
 ---
@@ -166,5 +166,5 @@ def create(self, vals_list):
 - Стандарт: [[REPO_STANDARD]] · Master: [[CAMPSCOUT_MASTER_TZ]] §16 Phase 8
 - План реалізації: **docs/PLAN.md** · Історія: **CHANGELOG.md**
 - Інструменти: [[library/tools/python]] · [[library/tools/docker]] · [[library/tools/git]]
-- Memory: [[claude-memory/project_campscout_arch_pivot_2026-06-07]]
+- Memory: 
 - Repo: `VladSh77/fayna-instructor-school`
