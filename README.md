@@ -1,59 +1,69 @@
-> [!WARNING]
-> **DEPRECATED — Архітектурний pivot 2026-06-07**
-> Цей модуль заморожений і не деплоїться. Весь функціонал переноситься у
-> [`fayna_camp_portal`](https://github.com/VladSh77/fayna-campscout) — єдиний модуль CampScout.
-> Код тут зберігається як reference до завершення міграції.
-
-# Odoo 17 Fayna Instructor School — scaffold (Phase 8)
+# Odoo 17 Fayna Instructor School
 
 ![Odoo Version](https://img.shields.io/badge/Odoo-17.0%20Community-purple)
 ![Python](https://img.shields.io/badge/Python-3.10+-blue)
-![Phase](https://img.shields.io/badge/Phase-8-red)
 ![License](https://img.shields.io/badge/License-LGPL--3-green.svg)
-![Status](https://img.shields.io/badge/Status-Scaffold-orange)
+![Status](https://img.shields.io/badge/Status-Live-brightgreen)
 
-**Developed by [Fayna Digital](https://www.fayna.agency) for CampScout and the broader Fayna Camp vertical stack.**
-**Author: Volodymyr Shevchenko**
-
----
-
-Public landing page + application form for camp instructors (vozhaty).
-
-Phase 8 of the master plan: `CAMPSCOUT_MASTER_TZ.md §16`.
-
-Current state: **scaffold only** — installable but inert. Feature flag
-`fayna_instructor_school.active` defaults to `False`. Implementation proceeds in
-increments listed in `docs/TZ.md`.
+**Opracowane przez [Fayna Digital](https://www.fayna.agency) dla CampScout i szerszego pionu Camp Fayna.**
+**Autor: Volodymyr Shevchenko**
 
 ---
 
-## Features (planned)
+Publiczna strona docelowa + formularz zgłoszeniowy dla instruktorów obozowych
+(wychowawców), z katalogiem kursów i zapisami uczestników.
 
-Dedicated /instructor-school page + application form + lead pipeline for new instructors.
+Faza 8 planu głównego: `CAMPSCOUT_MASTER_TZ.md §16`.
 
 ---
 
-## Architecture
+## Możliwości
+
+| Model | Opis |
+|-------|------|
+| `fayna.instructor.course` | Katalog kursów z maszyną stanów: `draft` → `open` → `in_progress` → `completed` / `cancelled` |
+| `fayna.instructor.enrollment` | Zapis per-uczestnik ze statusem płatności |
+
+- **Publiczna strona `/instructor-school`** — lista otwartych kursów
+- **Trasa zapisu portalu `/instructor-school/enroll/<id>`** (`auth=user`)
+- **Pełny ACL menedżera obozu**; portal: odczyt kursów + tworzenie własnego zapisu
+- **Reguła rekordu:** użytkownicy portalu widzą tylko własne zapisy
+- **i18n:** `uk_UA` + `pl_PL`
+
+## Architektura
 
 ```
 fayna_instructor_school/
-├── __manifest__.py
+├── __manifest__.py                  # 17.0.1.3.0, depends: base, website, mail
 ├── __init__.py
-├── data/ir_config_parameter.xml       # feature flag
-├── models/                             # Phase 8 implementation
-├── tests/test_scaffold.py              # install + flag + deps sanity
-├── docs/TZ.md                          # per-module TZ
-├── .github/workflows/ci.yml            # gate-2 CI
-├── .pre-commit-config.yaml             # gate-1 pre-commit
+├── data/ir_config_parameter.xml     # feature flag
+├── models/
+│   ├── course.py                    # fayna.instructor.course (maszyna stanów)
+│   └── enrollment.py                # fayna.instructor.enrollment (status płatności)
+├── controllers/
+│   └── website.py                   # /instructor-school + /instructor-school/enroll/<id>
+├── security/
+│   ├── ir.model.access.csv
+│   └── ir_rules.xml                 # portal: tylko własne zapisy
+├── views/
+│   ├── instructor_course_views.xml
+│   ├── instructor_enrollment_views.xml
+│   ├── course_views.xml
+│   ├── enrollment_views.xml
+│   ├── menu.xml
+│   ├── school_menu.xml
+│   └── website/instructor_school_page.xml
+├── tests/                           # test_instructor_school, test_course_enrollment, test_instructor, test_scaffold
+├── docs/TZ.md                       # specyfikacja per-moduł
+├── .github/workflows/ci.yml         # gate-2 CI
+├── .pre-commit-config.yaml          # gate-1 pre-commit
 ├── pyproject.toml
 ├── LICENSE
 ├── CHANGELOG.md
 └── README.md
 ```
 
----
-
-## Installation
+## Instalacja
 
 ```bash
 cd /opt/campscout/custom-addons
@@ -63,23 +73,18 @@ docker exec campscout_web odoo -c /etc/odoo/odoo.conf -d campscout \
 docker restart campscout_web
 ```
 
-Module installs as **inert** (feature flag `False`). No behaviour change until flip.
+## Dokumentacja
+
+- [docs/TZ.md](docs/TZ.md) — specyfikacja (6 obszarów spec-driven)
+- [docs/PLAN.md](docs/PLAN.md) — dependency graph + fazy + checkpointy
+- [CHANGELOG.md](CHANGELOG.md) — historia wersji
 
 ---
 
-## Documentation
+## Licencja
 
-- [CLAUDE.md](CLAUDE.md) — як працювати з репо (+ банер #4ZONES)
-- [docs/TZ.md](docs/TZ.md) — специфікація (6 областей spec-driven)
-- [docs/PLAN.md](docs/PLAN.md) — dependency graph + фази + checkpoints
-- [CHANGELOG.md](CHANGELOG.md) — історія версій
+LGPL-3 — patrz [LICENSE](LICENSE).
 
 ---
 
-## License
-
-LGPL-3 — see [LICENSE](LICENSE).
-
----
-
-*Developed by [Fayna Digital](https://www.fayna.agency) · Volodymyr Shevchenko*
+*Opracowane przez [Fayna Digital](https://www.fayna.agency) · Volodymyr Shevchenko*
