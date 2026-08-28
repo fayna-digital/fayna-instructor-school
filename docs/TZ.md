@@ -166,5 +166,5 @@ def create(self, vals_list):
 - Стандарт: [[REPO_STANDARD]] · Master: [[CAMPSCOUT_MASTER_TZ]] §16 Phase 8
 - План реалізації: **docs/PLAN.md** · Історія: **CHANGELOG.md**
 - Інструменти: [[library/tools/python]] · [[library/tools/docker]] · [[library/tools/git]]
-- Memory: 
+- Memory:
 - Repo: `VladSh77/fayna-instructor-school`
